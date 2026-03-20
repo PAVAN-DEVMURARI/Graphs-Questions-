@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+
+bool dfs(int node, int parent, vector<vector<int>>& adj, vector<int>& visi)  // ? visi pass by reference
+{
+    visi[node] = 1;
+
+    for(auto it : adj[node])
+    {
+        if(visi[it] == 0)
+        {
+            if(dfs(it, node, adj, visi) == true)  // ? same visi pass karo
+            {
+                return true;
+            }
+        }
+        else if(it != parent)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+string cycleDetection(vector<vector<int>>& edges, int n, int m)
+{
+    // Size n+1 rakho (1-indexed ke liye)
+    vector<vector<int>> adj(n + 1);           // ? Fix 1
+
+    for(int i = 0; i < m; i++)
+    {
+        int u = edges[i][0];
+        int v = edges[i][1];
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    vector<int> visi(n+1,0);
+    // bool ans = dfs(1,-1,adj,visi);
+
+    // if(ans)
+    // return "Yes";
+    // else
+    // return "No";
+
+     // ? Saare components check karo
+    for(int i = 1; i <= n; i++)
+    {
+        if(!visi[i])
+        {
+            if(dfs(i, -1, adj, visi) == true)
+                return "Yes";
+        }
+    }
+
+    return "No";
+ 
+}
